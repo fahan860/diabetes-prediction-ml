@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block title %}Compare Models - Diabetes Prediction{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chart-container {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .chart-container h3 {
+        margin-top: 0;
+        color: #667eea;
+    }
+
+    .bar-chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 1rem;
+        height: 300px;
+        margin-top: 1rem;
+    }
+
+    .bar {
+        flex: 1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 8px 8px 0 0;
+        position: relative;
+        min-height: 50px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+    .bar:hover {
+        filter: brightness(1.1);
+        transform: scaleY(1.05);
+    }
+
+    .bar-label {
+        position: absolute;
+        bottom: -30px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .bar-value {
+        color: white;
+        font-weight: bold;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    .comparison-table th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+    }
+
+    .comparison-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .comparison-table tbody tr:hover {
+        background: #f9f9f9;
+    }
+
+    .score-bar {
+        background: #f0f0f0;
+        height: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .score-fill {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.85rem;
+        transition: width 0.5s ease;
+    }
+
+    .metric-comparison {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>📊 Model Performance Comparison</h2>
+    <p style="margin-bottom: 2rem; color: #666;">
+        Detailed comparison of all 4 machine learning models trained on the Pima Indians Diabetes dataset.
+    </p>
+
+    <div class="chart-container">
+        <h3>Accuracy Comparison</h3>
+        <div class="bar-chart" id="accuracyChart"></div>
+    </div>
+
+    <div class="chart-container">
+        <h3>Precision Comparison</h3>
+        <div class="bar-chart" id="precisionChart"></div>
+    </div>
+
+    <div class="chart-container">
+        <h3>Recall Comparison</h3>
+        <div class="bar-chart" id="recallChart"></div>
+    </div>
+
+    <div class="chart-container">
+        <h3>F1 Score Comparison</h3>
+        <div class="bar-chart" id="f1Chart"></div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>📈 Detailed Metrics Table</h2>
+    <div class="table-responsive">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Accuracy</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>F1 Score</th>
+                </tr>
+            </thead>
+            <tbody id="metricsTableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <h2>🎯 Recommendations</h2>
+    <div style="margin-top: 1rem;">
+        <div style="padding: 1rem; background: #d1ecf1; border-radius: 8px; border-left: 4px solid #0c5460; margin-bottom: 1rem;">
+            <strong style="color: #0c5460;">Best Overall Model:</strong>
+            <p id="bestModel" style="margin: 0.5rem 0 0;">Loading...</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div style="padding: 1rem; background: #e7f3ff; border-radius: 8px;">
+                <h4 style="color: #004085; margin-top: 0;">High Accuracy</h4>
+                <p style="color: #666; font-size: 0.9rem;">Models with >75% accuracy are suitable for initial screening.</p>
+            </div>
+            <div style="padding: 1rem; background: #fff3cd; border-radius: 8px;">
+                <h4 style="color: #856404; margin-top: 0;">Recall Priority</h4>
+                <p style="color: #666; font-size: 0.9rem;">High recall minimizes false negatives (missed diabetes cases).</p>
+            </div>
+            <div style="padding: 1rem; background: #f8d7da; border-radius: 8px;">
+                <h4 style="color: #721c24; margin-top: 0;">Precision Important</h4>
+                <p style="color: #666; font-size: 0.9rem;">High precision reduces unnecessary alarms and follow-ups.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Données des métriques
+const data = {{ data | tojson }};
+
+// Fonction pour créer un graphique en barres
+function createBarChart(containerId, metric) {
+    const container = document.getElementById(containerId);
+    const models = Object.keys(data[metric]);
+    const values = Object.values(data[metric]);
+    
+    container.innerHTML = '';
+    
+    const maxValue = Math.max(...values);
+    
+    models.forEach((model, index) => {
+        const value = values[index];
+        const percentage = (value / maxValue) * 100;
+        
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = (percentage * 2) + 'px';
+        bar.innerHTML = `
+            <div class="bar-value">${(value * 100).toFixed(1)}%</div>
+            <div class="bar-label">${model}</div>
+        `;
+        container.appendChild(bar);
+    });
+}
+
+// Créer les graphiques
+createBarChart('accuracyChart', 'accuracy');
+createBarChart('precisionChart', 'precision');
+createBarChart('recallChart', 'recall');
+createBarChart('f1Chart', 'f1_score');
+
+// Remplir le tableau
+const tableBody = document.getElementById('metricsTableBody');
+const models = Object.keys(data.accuracy);
+models.forEach(model => {
+    const row = document.createElement('tr');
+    const accuracy = (data.accuracy[model] * 100).toFixed(2);
+    const precision = (data.precision[model] * 100).toFixed(2);
+    const recall = (data.recall[model] * 100).toFixed(2);
+    const f1 = (data.f1_score[model] * 100).toFixed(2);
+    
+    row.innerHTML = `
+        <td><strong>${model}</strong></td>
+        <td>
+            <div class="score-bar">
+                <div class="score-fill" style="width: ${accuracy}%">${accuracy}%</div>
+            </div>
+        </td>
+        <td>
+            <div class="score-bar">
+                <div class="score-fill" style="width: ${precision}%">${precision}%</div>
+            </div>
+        </td>
+        <td>
+            <div class="score-bar">
+                <div class="score-fill" style="width: ${recall}%">${recall}%</div>
+            </div>
+        </td>
+        <td>
+            <div class="score-bar">
+                <div class="score-fill" style="width: ${f1}%">${f1}%</div>
+            </div>
+        </td>
+    `;
+    tableBody.appendChild(row);
+});
+
+// Trouver le meilleur modèle
+const bestModelName = models.reduce((best, model) => 
+    data.f1_score[model] > data.f1_score[best] ? model : best
+);
+const bestScore = (data.f1_score[bestModelName] * 100).toFixed(2);
+
+document.getElementById('bestModel').innerHTML = 
+    `<strong>${bestModelName}</strong> with an F1 Score of <strong>${bestScore}%</strong>`;
+</script>
+{% endblock %}

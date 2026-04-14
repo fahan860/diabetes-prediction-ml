@@ -54,6 +54,24 @@ Outputs generated after running the project:
 - `models/metrics.json`: per-model metrics (accuracy, precision, recall, F1, confusion matrix)
 - `models/best_model.pkl`: best model by F1 score
 
+## Model Selection Strategy
+
+Given the cost of false negatives in medical screening,
+model comparison prioritizes Recall and F1-score over Accuracy.
+
+Cross-validation is used to ensure model robustness.
+
+## ML Pipeline Overview
+
+1. Data loading
+2. Missing value handling
+3. Feature scaling (StandardScaler)
+4. Train/test split
+5. Model training
+6. Evaluation
+7. Best model persistence
+
+
 ## Run
 ```bash
 pip install -r requirements.txt

@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}About - Diabetes Prediction{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>🏥 About This Project</h2>
+    <p style="margin-bottom: 1.5rem; color: #666; line-height: 1.8;">
+        The Diabetes Prediction project is a comprehensive machine learning application designed to predict 
+        diabetes status using the Pima Indians Diabetes dataset. This project demonstrates best practices in 
+        data science, including modular code architecture, multiple model evaluation, and a user-friendly web interface.
+    </p>
+</div>
+
+<div class="card">
+    <h2>📊 Dataset Information</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        <div>
+            <h3 style="color: #667eea;">Source</h3>
+            <p>Pima Indians Diabetes Database from the National Institute of Diabetes and Digestive and Kidney Diseases</p>
+        </div>
+        <div>
+            <h3 style="color: #667eea;">Size</h3>
+            <p>768 samples with 8 clinical features and 1 binary target variable (Outcome)</p>
+        </div>
+        <div>
+            <h3 style="color: #667eea;">Features</h3>
+            <ul style="margin-left: 1.5rem;">
+                <li>Pregnancies</li>
+                <li>Glucose</li>
+                <li>Blood Pressure</li>
+                <li>Skin Thickness</li>
+                <li>Insulin</li>
+                <li>BMI</li>
+                <li>Diabetes Pedigree Function</li>
+                <li>Age</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>🤖 Machine Learning Models</h2>
+    <p style="margin-bottom: 1.5rem; color: #666;">
+        This project trains and compares 4 different machine learning algorithms for diabetes prediction:
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <div style="border: 2px solid #667eea; border-radius: 10px; padding: 1.5rem;">
+            <h3 style="color: #667eea; margin-top: 0;">Logistic Regression</h3>
+            <p style="color: #666; margin-bottom: 1rem;">
+                A linear classification algorithm that models the probability of a binary outcome.
+            </p>
+            <ul style="margin-left: 1.5rem; font-size: 0.9rem;">
+                <li>Fast and interpretable</li>
+                <li>Works well for linear relationships</li>
+                <li>Good baseline model</li>
+            </ul>
+        </div>
+
+        <div style="border: 2px solid #667eea; border-radius: 10px; padding: 1.5rem;">
+            <h3 style="color: #667eea; margin-top: 0;">Random Forest</h3>
+            <p style="color: #666; margin-bottom: 1rem;">
+                An ensemble method combining multiple decision trees for robust predictions.
+            </p>
+            <ul style="margin-left: 1.5rem; font-size: 0.9rem;">
+                <li>Handles non-linear patterns</li>
+                <li>Less prone to overfitting</li>
+                <li>Feature importance ranking</li>
+            </ul>
+        </div>
+
+        <div style="border: 2px solid #667eea; border-radius: 10px; padding: 1.5rem;">
+            <h3 style="color: #667eea; margin-top: 0;">Support Vector Machine</h3>
+            <p style="color: #666; margin-bottom: 1rem;">
+                A powerful algorithm finding optimal decision boundaries in high-dimensional space.
+            </p>
+            <ul style="margin-left: 1.5rem; font-size: 0.9rem;">
+                <li>Effective in high dimensions</li>
+                <li>Memory efficient</li>
+                <li>Versatile kernel options</li>
+            </ul>
+        </div>
+
+        <div style="border: 2px solid #667eea; border-radius: 10px; padding: 1.5rem;">
+            <h3 style="color: #667eea; margin-top: 0;">K-Nearest Neighbors</h3>
+            <p style="color: #666; margin-bottom: 1rem;">
+                A simple, instance-based algorithm that classifies based on nearby training examples.
+            </p>
+            <ul style="margin-left: 1.5rem; font-size: 0.9rem;">
+                <li>Simple and intuitive</li>
+                <li>No training phase</li>
+                <li>Works with non-linear data</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>🏗️ Architecture & Technology Stack</h2>
+    
+    <h3 style="color: #667eea; margin-top: 1rem;">Backend</h3>
+    <ul style="margin-left: 1.5rem;">
+        <li><strong>Python 3.10+</strong> - Primary programming language</li>
+        <li><strong>Flask</strong> - Web framework for API and routing</li>
+        <li><strong>Scikit-learn</strong> - Machine learning library</li>
+        <li><strong>Pandas & NumPy</strong> - Data processing and manipulation</li>
+        <li><strong>Joblib</strong> - Model serialization and persistence</li>
+    </ul>
+
+    <h3 style="color: #667eea; margin-top: 1rem;">Frontend</h3>
+    <ul style="margin-left: 1.5rem;">
+        <li><strong>HTML5 & CSS3</strong> - Semantic markup and responsive styling</li>
+        <li><strong>JavaScript (Vanilla)</strong> - Interactive features without heavy frameworks</li>
+        <li><strong>Responsive Design</strong> - Works on desktop, tablet, and mobile devices</li>
+    </ul>
+
+    <h3 style="color: #667eea; margin-top: 1rem;">Project Structure</h3>
+    <div style="background: #f5f7fa; padding: 1rem; border-radius: 8px; overflow-x: auto; margin-top: 1rem;">
+        <pre style="margin: 0; font-size: 0.85rem;">
+project/
+├── app.py                 # Flask application
+├── main.py               # Entry point for training
+├── requirements.txt      # Python dependencies
+├── data/
+│   └── raw/
+│       └── diabetes.csv  # Dataset
+├── models/              # Generated artifacts
+│   ├── metrics.json
+│   └── best_model.pkl
+├── src/
+│   ├── config.py
+│   ├── main.py
+│   ├── data/
+│   │   └── processing.py
+│   ├── models/
+│   │   └── training.py
+│   └── utils/
+│       └── io.py
+└── templates/
+    ├── base.html
+    ├── index.html
+    ├── compare.html
+    ├── predict.html
+    └── about.html</pre>
+    </div>
+</div>
+
+<div class="card">
+    <h2>📈 Performance Metrics Explained</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 10px;">
+            <h3 style="color: white; margin-top: 0;">Accuracy</h3>
+            <p style="margin-bottom: 1rem;">
+                The proportion of correct predictions (both TP and TN) among all predictions.
+            </p>
+            <code style="font-size: 0.85rem; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 4px; display: block;">
+                (TP + TN) / (TP + TN + FP + FN)
+            </code>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border-radius: 10px;">
+            <h3 style="color: white; margin-top: 0;">Precision</h3>
+            <p style="margin-bottom: 1rem;">
+                Of positive predictions, how many were actually correct? Important to reduce false alarms.
+            </p>
+            <code style="font-size: 0.85rem; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 4px; display: block;">
+                TP / (TP + FP)
+            </code>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 1.5rem; border-radius: 10px;">
+            <h3 style="color: white; margin-top: 0;">Recall (Sensitivity)</h3>
+            <p style="margin-bottom: 1rem;">
+                Of actual positive cases, how many did we catch? Critical for medical screening.
+            </p>
+            <code style="font-size: 0.85rem; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 4px; display: block;">
+                TP / (TP + FN)
+            </code>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #333; padding: 1.5rem; border-radius: 10px;">
+            <h3 style="color: #333; margin-top: 0;">F1 Score</h3>
+            <p style="margin-bottom: 1rem; color: #555;">
+                Harmonic mean of precision and recall. Balances both metrics.
+            </p>
+            <code style="font-size: 0.85rem; background: rgba(0,0,0,0.1); padding: 0.5rem; border-radius: 4px; display: block; color: #333;">
+                2 × (Precision × Recall) / (Precision + Recall)
+            </code>
+        </div>
+    </div>
+
+    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; border-radius: 8px; margin-top: 1.5rem;">
+        <strong>Key Point:</strong> In medical screening, <strong>recall</strong> is often more important than precision 
+        because missing a positive case (false negative) is more costly than a false alarm (false positive).
+    </div>
+</div>
+
+<div class="card">
+    <h2>⚠️ Important Disclaimers</h2>
+    <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 1.5rem; color: #721c24;">
+        <h3 style="color: #721c24; margin-top: 0;">Medical Use</h3>
+        <p>
+            This application is designed for <strong>educational and screening purposes only</strong>. 
+            It should never be used as a substitute for professional medical diagnosis. 
+            Always consult with a qualified healthcare provider for accurate diagnosis and treatment.
+        </p>
+        
+        <h3 style="color: #721c24;">Data Limitations</h3>
+        <p>
+            The model is trained on the Pima Indians dataset, which may not represent all populations. 
+            Performance may vary for individuals outside the original population demographics.
+        </p>
+        
+        <h3 style="color: #721c24;">Bias and Fairness</h3>
+        <p>
+            Machine learning models can perpetuate or amplify biases present in training data. 
+            This model may perform differently across different demographic groups.
+        </p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>👨‍💻 Developer Information</h2>
+    <p style="color: #666;">
+        This project was built as part of a machine learning education initiative. 
+        It demonstrates best practices in building modular, testable, and deployable ML applications.
+    </p>
+    <p style="color: #666;">
+        <strong>Technologies:</strong> Python, Flask, Scikit-learn, Pandas, NumPy<br>
+        <strong>Dataset:</strong> Pima Indians Diabetes Database<br>
+        <strong>Models:</strong> Logistic Regression, Random Forest, SVM, KNN
+    </p>
+</div>
+{% endblock %}
