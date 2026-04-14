@@ -25,22 +25,44 @@ The codebase now uses a modular Python architecture:
 ├── data/
 │   └── raw/
 │       └── diabetes.csv
-├── models/                  # generated model artifacts (ignored by git)
+│
+├── models/                      # modèles entraînés + metrics
+│   ├── best_model.pkl
+│   └── metrics.json
+│
 ├── notebooks/
 │   └── projet_diabete.ipynb
-├── screenshots/             # demo images
+│
+├── screenshots/                 # images de démo
+│
 ├── src/
 │   ├── config.py
 │   ├── main.py
+│   │
 │   ├── data/
 │   │   └── processing.py
+│   │
 │   ├── models/
 │   │   └── training.py
-│   └── utils/
-│       └── io.py
+│   │
+│   ├── utils/
+│   │   └── io.py
+│   │
+│   └── __init__.py
+│
+├── templates/                   # interface Flask (HTML)
+│   ├── 404.html
+│   ├── about.html
+│   ├── base.html
+│   ├── compare.html
+│   ├── index.html
+│   └── predict.html
+│
 ├── .gitignore
-├── main.py                  # repository entry point
-└── requirements.txt
+├── app.py                       # Flask web app (entry point)
+├── requirements_web.txt        # dependencies web
+├── requirements.txt            # (optionnel ancien)
+└── README.md
 ```
 
 ## Results
@@ -53,24 +75,6 @@ The pipeline trains and evaluates:
 Outputs generated after running the project:
 - `models/metrics.json`: per-model metrics (accuracy, precision, recall, F1, confusion matrix)
 - `models/best_model.pkl`: best model by F1 score
-
-## Model Selection Strategy
-
-Given the cost of false negatives in medical screening,
-model comparison prioritizes Recall and F1-score over Accuracy.
-
-Cross-validation is used to ensure model robustness.
-
-## ML Pipeline Overview
-
-1. Data loading
-2. Missing value handling
-3. Feature scaling (StandardScaler)
-4. Train/test split
-5. Model training
-6. Evaluation
-7. Best model persistence
-
 
 ## Run
 ```bash
